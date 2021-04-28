@@ -1,0 +1,2 @@
+# Ignore any local qcow2 image.
+*.qcow2
