@@ -1,0 +1,10 @@
+---
+
+# Common tasks for master and workers.
+- import_tasks: ./common.yml
+
+- import_tasks: ./master.yml
+  when: "'k8s-masters' in group_names"
+
+- import_tasks: ./worker.yml
+  when: "'k8s-workers' in group_names"

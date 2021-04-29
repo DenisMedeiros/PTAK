@@ -1,0 +1,10 @@
+---
+
+- name: ensure server has correct hostname
+  hostname:
+    name: "{{ hostname }}"
+
+- name: ensure centos epel repository is enabled
+  yum:
+    name: epel-release
+    state: present

@@ -49,6 +49,26 @@ https://github.com/dmacvicar/terraform-provider-libvirt
 https://github.com/dmacvicar/terraform-provider-libvirt/blob/master/docs/migration-13.md
 ```
 
+5. Install Ansible.
+
+You can install Ansible either using your package-management system or via pip (in a virtual env or user-wide).
+
+```bash
+# Create a virtual environment.
+python3 -m venv ./venv/
+
+# Activate venv.
+source ./venv/bin/activate
+
+# Make sure pip is updated.
+pip3 install --upgrade pip
+
+# Install Ansible.
+pip3 install ansible
+```
+You may need to install some system python libraries. For more info:
+https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html
+
 ## Packer Usage
 
 In this stage, we will use Packer to create a CentOS 7 QEMU image to be used by Libvirt later on.
@@ -116,9 +136,22 @@ terraform plan
 terraform apply
 ```
 
+Important note: Kubernetes requires at least 2 cores and 2 GB of RAM in each node.
+
 At this point, you can even open virt-manager to confirm the new VMs are up and
 running.
 
 ## Ansible Usage
 
-TODO (WIP)
+Once you have your virtual machines up and running, make sure they are properly
+added to the inventory file `dev`.
+
+1. Feel free to edit any of the Ansible variables defined in the roles or
+inventories.
+
+2. Finally, run the kubernetes playbook to create the cluster.
+
+```bash
+# Run the ansible playbook "kubernetes.yml".
+ ansible-playbook -i dev playbooks/kubernetes.yml
+```

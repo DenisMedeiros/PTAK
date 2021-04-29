@@ -1,0 +1,14 @@
+---
+# Tasks that required by master.
+
+- name: check if the kubernetes cluster has been initiliazed
+  stat:
+    path: /etc/kubernetes/admin.conf
+  register: admin_file
+
+- name: initialize kubernetes cluster if it has not been initialized
+  command: >
+    kubeadm init --pod-network-cidr={{ k8s_pod_network }} --skip-token-print
+      --token={{ k8s_token.token }} --token-ttl={{ k8s_token.ttl }}
+      --apiserver-bind-port={{ k8s_api_port }} --apiserver-cert-extra-sans={{ ansible_hostname }}
+  when: not admin_file.stat.exists

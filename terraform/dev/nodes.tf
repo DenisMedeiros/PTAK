@@ -7,7 +7,7 @@ resource "libvirt_volume" "k8s1_disk1" {
 }
 
 resource "libvirt_volume" "k8s2_disk1" {
-  name           = "k8s2-disk1"
+  name   = "k8s2-disk1"
   pool   = var.pool
   source = var.packer_image
 }
@@ -47,7 +47,7 @@ resource "libvirt_volume" "k8s3_disk2" {
 resource "libvirt_domain" "k8s1" {
   name = "k8s1"
   vcpu = 2
-  memory = 1024
+  memory = 2048
   running = true
 
   # Disk based on the QEMU image (operating system).
@@ -72,7 +72,7 @@ resource "libvirt_domain" "k8s1" {
 resource "libvirt_domain" "k8s2" {
   name = "k8s2"
   vcpu = 2
-  memory = 1024
+  memory = 2048
   running = true
 
   # Disk based on the QEMU image (operating system).
@@ -97,7 +97,7 @@ resource "libvirt_domain" "k8s2" {
 resource "libvirt_domain" "k8s3" {
   name = "k8s3"
   vcpu = 2
-  memory = 1024
+  memory = 2048
   running = true
 
   # Disk based on the QEMU image (operating system).

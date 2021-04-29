@@ -1,0 +1,8 @@
+---
+- name: kubernetes
+  hosts:
+    - k8s-masters
+    - k8s-workers
+  roles:
+    - base
+    - kubernetes
