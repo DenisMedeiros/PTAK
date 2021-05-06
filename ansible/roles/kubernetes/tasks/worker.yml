@@ -6,3 +6,9 @@
   stat:
     path: /etc/kubernetes/kubelet.conf
   register: kubelet_file
+
+- name: join kubernetes cluster
+  command: >
+    kubeadm join {{ k8s_master_address }}:{{ k8s_api_port }}
+      --token {{ k8s_token.token }} --discovery-token-unsafe-skip-ca-verification
+  when: not kubelet_file.stat.exists

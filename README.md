@@ -155,3 +155,25 @@ inventories.
 # Run the ansible playbook "kubernetes.yml".
  ansible-playbook -i dev playbooks/kubernetes.yml
 ```
+
+You are using the default values, at this point you should be able to connect to
+the master node and run `kubectl` to manage the cluster. 
+
+```bash
+# Connect to the master node.
+ssh -i ssh/ansible ansible@10.77.0.10
+
+# Run kubectl (for example, to list all nodes).
+kubectl get nodes
+```
+
+
+This Kubernetes setup uses Calico Network and `calicoctl` is installed as a pod.
+To run `calicoctl`, please run the command bellow:
+
+```bash
+# Run calicoctl.
+kubectl exec -ti -n kube-system calicoctl -- /calicoctl <options>
+```
+
+For more info about Calico: https://docs.projectcalico.org/

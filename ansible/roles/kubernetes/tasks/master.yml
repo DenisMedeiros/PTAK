@@ -12,3 +12,74 @@
       --token={{ k8s_token.token }} --token-ttl={{ k8s_token.ttl }}
       --apiserver-bind-port={{ k8s_api_port }} --apiserver-cert-extra-sans={{ ansible_hostname }}
   when: not admin_file.stat.exists
+
+- name: create a kubernetes config folder for the root user
+  file:
+    path: /root/.kube
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
+- name: copy kubernetes admin file to config folder
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /root/.kube/config
+    owner: root
+    group: root
+    mode: 0600
+    remote_src: yes
+
+- name: set up kubernetes network configuration (using calico)
+  k8s:
+    state: present
+    definition: "{{ item }}"
+  with_items:
+    - "{{ lookup('url', 'https://docs.projectcalico.org/manifests/tigera-operator.yaml', split_lines=False) | from_yaml_all | list }}"
+    - "{{ lookup('url', 'https://docs.projectcalico.org/manifests/custom-resources.yaml', split_lines=False) | from_yaml_all | list }}"
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  when: not admin_file.stat.exists
+
+
+- name: remove tains on the master node
+  shell: kubectl taint nodes --all node-role.kubernetes.io/master-
+  when: not admin_file.stat.exists
+
+# Wait for calico basic apps to be up and running.
+- name: wait for calico kube controllers
+  k8s_info:
+    kind: Deployment
+    namespace: calico-system
+    name: calico-kube-controllers
+    wait: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+- name: wait for calico typha
+  k8s_info:
+    kind: Deployment
+    namespace: calico-system
+    name: calico-typha
+    wait: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+- name: wait for calico node
+  k8s_info:
+    kind: DaemonSet
+    namespace: calico-system
+    name: calico-node
+    wait: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+- name: install calicoctl
+  k8s:
+    state: present
+    definition: "{{ item }}"
+  with_items:
+    - "{{ lookup('url', 'https://docs.projectcalico.org/manifests/calicoctl.yaml', split_lines=False) | from_yaml_all | list }}"
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  when: not admin_file.stat.exists

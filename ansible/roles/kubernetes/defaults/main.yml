@@ -1,11 +1,14 @@
 ---
 # defaults file for ./roles/kubernetes
 
-# This network is required by Flannel.
-k8s_pod_network: 10.244.0.0/16
+# This network is required by Calico network.
+k8s_pod_network: 192.168.0.0/16
 
 k8s_api_port: 6443
 
 k8s_token:
   token: abcdef.0123456789abcdef
   ttl: "0" # Can also be 1s, 2m, 3h.
+
+# Master hostname (used by the workers to join the cluster).
+k8s_master_address: k8s1.k8s.local

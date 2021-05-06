@@ -79,3 +79,17 @@
   with_items:
     - kubelet
     - docker
+
+- name: ensure python3 is installed
+  yum:
+    name: python3
+    state: installed
+
+- name: install python libraries required by Ansible k8s module
+  pip:
+    name:
+      - openshift
+      - PyYAML
+      - kubernetes
+    state: present
+    executable: pip3
