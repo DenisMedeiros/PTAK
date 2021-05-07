@@ -1,0 +1,24 @@
+---
+
+# https://github.com/kubernetes/ingress-nginx
+
+# Set up ingress using Nginx.
+- name: set up kubernetes ingress nginx
+  k8s:
+    state: present
+    definition: "{{ item }}"
+  with_items:
+    - "{{ lookup('url', 'https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.46.0/deploy/static/provider/baremetal/deploy.yaml', split_lines=False) | from_yaml_all | list }}"
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  when: not admin_file.stat.exists
+
+- name: apply custom ingress nginx custom configs (ports)
+  k8s:
+    state: present
+    definition: "{{ item }}"
+  with_items:
+    - "{{ lookup('template', 'ingress-config.yml.j2') }}"
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  when: not admin_file.stat.exists

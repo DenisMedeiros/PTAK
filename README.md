@@ -167,6 +167,12 @@ ssh -i ssh/ansible ansible@10.77.0.10
 kubectl get nodes
 ```
 
+## Kubernetes Description
+
+This Kubernetes cluster relies on some technologies described bellow. Also, some
+of its configuration is defined in variables in the `defaults.yml`.
+
+### Networking
 
 This Kubernetes setup uses Calico Network and `calicoctl` is installed as a pod.
 To run `calicoctl`, please run the command bellow:
@@ -177,3 +183,23 @@ kubectl exec -ti -n kube-system calicoctl -- /calicoctl <options>
 ```
 
 For more info about Calico: https://docs.projectcalico.org/
+
+### Load Balancer
+
+This setup uses the project MetalLB as loadbalancer, with the layer 2 configuration.
+
+For more info about MetalLB: https://metallb.universe.tf/
+
+### Ingress Nginx
+
+The ingress feature is implemented with Nginx. 
+
+For more info about ingress-nginx: https://github.com/kubernetes/ingress-nginx
+
+### Helm
+
+TODO
+
+### Kubernetes Dashboard/ Monitoring
+
+TODO

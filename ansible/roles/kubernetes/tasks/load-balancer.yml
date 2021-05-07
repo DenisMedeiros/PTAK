@@ -1,0 +1,29 @@
+---
+# Set up load balancer.
+
+- name: enable arp strict mode if not enabled (required by metallb)
+  shell: >
+    kubectl get configmap kube-proxy -n kube-system -o yaml |
+      sed -e "s/strictARP: false/strictARP: true/" |
+      kubectl apply -f - -n kube-system
+
+- name: set up metallb as loadbalancer (level 2)
+  k8s:
+    state: present
+    definition: "{{ item }}"
+  with_items:
+    - "{{ lookup('url', 'https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manifests/namespace.yaml', split_lines=False) | from_yaml_all | list }}"
+    - "{{ lookup('url', 'https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manifests/metallb.yaml', split_lines=False) | from_yaml_all | list }}"
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  when: not admin_file.stat.exists
+
+- name: apply custom metallb custom configs (ip range)
+  k8s:
+    state: present
+    definition: "{{ item }}"
+  with_items:
+    - "{{ lookup('template', 'metallb-config.yml.j2') }}"
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  when: not admin_file.stat.exists

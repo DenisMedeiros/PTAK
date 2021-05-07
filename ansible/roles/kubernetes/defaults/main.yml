@@ -12,3 +12,17 @@ k8s_token:
 
 # Master hostname (used by the workers to join the cluster).
 k8s_master_address: k8s1.k8s.local
+
+k8s_load_balancer_range: 10.0.0.200-10.0.0.210
+
+k8s_ingress_ip: 10.0.0.200
+
+k8s_ingress_ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  - name: https
+    port: 443
+    targetPort: 443
+    protocol: TCP

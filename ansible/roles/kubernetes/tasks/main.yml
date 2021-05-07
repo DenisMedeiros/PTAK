@@ -8,3 +8,9 @@
 
 - import_tasks: ./worker.yml
   when: "'k8s-workers' in group_names"
+
+- import_tasks: ./load-balancer.yml
+  when: "'k8s-masters' in group_names"
+
+- import_tasks: ./ingress.yml
+  when: "'k8s-masters' in group_names"

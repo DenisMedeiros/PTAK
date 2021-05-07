@@ -41,10 +41,9 @@
     ansible_python_interpreter: /usr/bin/python3
   when: not admin_file.stat.exists
 
-
-- name: remove tains on the master node
-  shell: kubectl taint nodes --all node-role.kubernetes.io/master-
-  when: not admin_file.stat.exists
+# - name: remove tains on the master node
+#   shell: kubectl taint nodes --all node-role.kubernetes.io/master-
+#   when: not admin_file.stat.exists
 
 # Wait for calico basic apps to be up and running.
 - name: wait for calico kube controllers
